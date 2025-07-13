@@ -58,7 +58,7 @@ function showPopup(message, onlyOK = false, callback = null) {
 
 function transitionToBreak() {
   alarmAudio.play();
-  showPopup("⏰ Waktu kerja selesai. Mulai istirahat?", false, (confirm) => {
+  showPopup("⏰ Waktu selesai, lanjut?", false, (confirm) => {
     if (confirm) {
       timeLeft = getBreakDurasi();
       document.getElementById("session-label").textContent = "Istirahat";
