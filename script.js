@@ -56,17 +56,25 @@ function showPopup(message, onlyOK = false, callback = null) {
   }
 }
 
-function transitionToBreak() {
+function transitionToNextSession() {
   alarmAudio.play();
-  showPopup("⏰ Waktu selesai, lanjut?", false, (confirm) => {
+
+  const isKerjaSelesai = document.getElementById("session-label").textContent === "Sesi Kerja";
+  const message = isKerjaSelesai
+    ? "⏰ Waktu kerja selesai. Mulai istirahat?"
+    : "☕ Waktu istirahat selesai. Lanjut kerja?";
+
+  showPopup(message, false, (confirm) => {
     if (confirm) {
-      timeLeft = getBreakDurasi();
-      document.getElementById("session-label").textContent = "Istirahat";
+      const nextTime = isKerjaSelesai ? getBreakDurasi() : getInputDurasi();
+      timeLeft = nextTime;
+      document.getElementById("session-label").textContent = isKerjaSelesai ? "Istirahat" : "Sesi Kerja";
       updateTimerDisplay(timeLeft);
       document.getElementById("start").click();
     }
   });
 }
+
 
 document.getElementById("start").onclick = () => {
   if (isRunning) return;
@@ -89,7 +97,8 @@ document.getElementById("start").onclick = () => {
     } else {
       clearInterval(timerInterval);
       isRunning = false;
-      transitionToBreak();
+      transitionToNextSession();
+
     }
   }, 1000);
 };
